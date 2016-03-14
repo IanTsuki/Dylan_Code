@@ -66,7 +66,7 @@ void setup() {
   //Start the pressure sensor
   pressure.begin();               // begins pressure sensor connected to SCL & SDA pins
 
-  dataString = "Time since boot(milliseconds),Temperatur(Degrees Celsius),Humidity(%),Barometer(HectoPascles),Light(Lux),Sound";
+  dataString = "Time since boot(seconds),Temperatur(Degrees Celsius),Humidity(%),Barometer(HectoPascles),Light(Lux),Sound";
   saveData();
 }
 
@@ -108,10 +108,10 @@ void loop() {
       }  
     }
   }  
-  CurTime = int(millis);
+  CurTime = long(millis()/1000);
   dataString = String(String(CurTime) + "," + String(DHT_temp) + "," + String(DHT_hum) + "," + String(Baro_read) + "," + String(light_read) + "," + String(sound_sample));
   saveData(); 
-  delay(6000);
+  delay(30000);
 }
 
 
@@ -122,12 +122,12 @@ if(SD.exists("data.csv")){ // check the card is still there
 // now append new data file
 sensorData = SD.open("data.csv", FILE_WRITE);
 if (sensorData){
-sensorData.println(dataString);
-sensorData.close(); // close the file
-Serial.println(dataString);
-}
+  sensorData.println(dataString);
+  sensorData.close(); // close the file
+  Serial.println(dataString);
+  }
 }
 else{
-Serial.print("Error writing to file !");
-}
+  Serial.print("Error writing to file !");
+  }
 }
